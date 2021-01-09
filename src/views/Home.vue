@@ -1,18 +1,32 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <button @click="toggleDropdown">Dropdown</button>
+    <div v-if="dropdown">
+      <div v-for="listEntry in list" :key="listEntry.name">
+        {{listEntry.name}}
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import {defineComponent} from 'vue'
+import {useDropdown} from "@/reusables/dropdown";
+import {useList} from "@/reusables/useList";
 
-@Options({
-  components: {
-    HelloWorld,
+interface List {
+  id: number;
+  name: string;
+}
+
+export default defineComponent({
+  setup(){
+    const list = useList<List>()
+    list.entries.value = [{id: 1, name: 'name 1'}] as List[]
+    return {
+      ...useDropdown(),
+      list: list.entries.value
+    }
   },
 })
-export default class Home extends Vue {}
 </script>
